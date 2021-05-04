@@ -58,20 +58,11 @@ class Video(db.Model):
     __tablename__ = 'videos'
 
     id = Column(Integer, primary_key=True)
+    tester_id = Column(ForeignKey('testers.id'), nullable=False)
     duration = Column(Integer, nullable=False)
     time = Column(Integer, nullable=False)
+    filename = Column(String, nullable=False)
+    mimetype = Column(String, nullable=False)
+    content = Column(BLOB, nullable=False)
 
-    file = relationship('VideoFile', lazy='noload')
-
-
-class VideoFile(db.Model):
-    """Model for video files."""
-
-    __tablename__ = 'video_files'
-
-    video_id = Column(ForeignKey('videos.id'), primary_key=True, nullable=False)
-    format = Column(String(6), primary_key=True, nullable=False)
-    blob_id = Column(BLOB, nullable=False)
-    size = Column(Integer, nullable=False)
-
-    video = relationship('Video', lazy='noload')
+    tester = relationship('Tester', lazy='noload')

@@ -30,3 +30,5 @@ class ImageSchema(Schema):
 class ImporterSchema(Schema):
     tester = fields.Nested(TesterSchema, required=True)
     image_data = fields.Nested(ImageSchema, required=True, many=True)
+
+
