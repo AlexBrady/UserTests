@@ -6,10 +6,9 @@ from datetime import datetime
 from flask import Blueprint, request
 from flask_io import fields
 
-from api.schemas import ImageSchema, TesterSchema
+from api.schemas import ImageSchema, TesterSchema, VideoSchema
 from corelibs.models import Image, Video
-from corelibs.persistors import TesterPersisor
-from corelibs import db
+from corelibs.persistors import TesterPersisor, ImagePersisor, VideoPersisor
 from api import io
 
 
@@ -27,9 +26,13 @@ def import_tester(tester):
 
 
 @app.route('/images', methods=['POST'])
+@io.marshal_with(ImageSchema, envelope='images')
 @io.from_header('tester_id', fields.Integer(required=True))
 @io.from_body('image_data', ImageSchema(many=True))
 def import_images(tester_id, image_data):
+    image_persistor = ImagePersisor()
+
+    images = []
     for entry in image_data:
         image = Image()
         image.tester_id = tester_id
@@ -46,12 +49,15 @@ def import_images(tester_id, image_data):
 
         image.filename = os.path.basename(entry.get('image_path'))
 
-        db.session.add(image)
+        image_persistor.add_image(image)
+        images.append(image)
 
-    db.session.commit()
+
+    return images
 
 
 @app.route('/video', methods=['POST'])
+@io.marshal_with(VideoSchema)
 @io.from_header('tester_id', fields.Integer(required=True))
 @io.from_form('duration', fields.Integer(required=True))
 @io.from_form('time', fields.Integer(required=True))
@@ -69,5 +75,6 @@ def import_video(tester_id, duration, time):
     video.mimetype = file.mimetype
     video.content = file.read()
 
-    db.session.add(video)
-    db.session.commit()
+    VideoPersisor().add_video(video)
+
+    return video

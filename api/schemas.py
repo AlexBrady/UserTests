@@ -1,8 +1,15 @@
 
-from datetime import datetime
-from flask_io import fields, Schema, post_load, pre_load, post_dump, pre_dump
+from flask_io import fields, Schema, post_load, pre_dump
 
-from corelibs.models import Tester, Image
+from corelibs.models import Tester
+
+
+class VideoSchema(Schema):
+    id = fields.Integer(dump_only=True)
+    tester_id = fields.Integer(dump_only=True)
+    duration = fields.Integer(dump_only=True)
+    time = fields.DateTime(dump_only=True)
+    filename = fields.String(dump_only=True)
 
 
 class ImageSchema(Schema):
