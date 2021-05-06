@@ -19,6 +19,12 @@ app = Blueprint('importer', __name__, url_prefix='/importer')
 @io.marshal_with(TesterSchema)
 @io.from_body('tester', TesterSchema)
 def import_tester(tester):
+    """
+    Import a user with a json body, see TesterSchema for input types.
+
+    :param tester:
+    :return:
+    """
     tester_persistor = TesterPersisor()
     tester_persistor.add_tester(tester)
 
@@ -30,6 +36,18 @@ def import_tester(tester):
 @io.from_header('tester_id', fields.Integer(required=True))
 @io.from_body('image_data', ImageSchema(many=True))
 def import_images(tester_id, image_data):
+    """
+    Import images for a tester, see ImageSchema for input types.
+
+    Can import multiple images at once.
+
+    Note: The function of this is poor, as the images are expected to be in the project folder...
+          In hindsight, choosing a serialisation package/library that better handles bulk files should have been a
+          priority.
+    :param tester_id:
+    :param image_data:
+    :return:
+    """
     image_persistor = ImagePersisor()
 
     images = []
@@ -52,7 +70,6 @@ def import_images(tester_id, image_data):
         image_persistor.add_image(image)
         images.append(image)
 
-
     return images
 
 
@@ -62,6 +79,14 @@ def import_images(tester_id, image_data):
 @io.from_form('duration', fields.Integer(required=True))
 @io.from_form('time', fields.Integer(required=True))
 def import_video(tester_id, duration, time):
+    """
+    Import a video from a tester with a form-data body.
+
+    :param tester_id:
+    :param duration:
+    :param time:
+    :return:
+    """
     file = request.files.get('file')
     if file is None:
         return io.bad_request('Missing file')

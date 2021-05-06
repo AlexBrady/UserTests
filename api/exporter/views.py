@@ -15,6 +15,12 @@ app = Blueprint('exporter', __name__, url_prefix='/exporter')
 @app.route('/<tester_id>/metadata', methods=['GET'])
 @io.marshal_with(TesterSchema)
 def get_tester_metadata(tester_id):
+    """
+    Get a tester's data by their ID.
+
+    :param tester_id:
+    :return:
+    """
     persistor = TesterPersisor()
 
     if not persistor.ensure_tester_is_valid(tester_id):
@@ -34,6 +40,12 @@ def get_tester_metadata(tester_id):
 @app.route('/<tester_id>/images', methods=['GET'])
 @io.marshal_with(ImageSchema, envelope='images')
 def get_images(tester_id):
+    """
+    Get a tester's image data by their ID.
+
+    :param tester_id:
+    :return:
+    """
     persistor = ImagePersisor()
 
     if not persistor.ensure_tester_is_valid(tester_id):
@@ -45,6 +57,13 @@ def get_images(tester_id):
 @app.route('/image/<image_id>', methods=['GET'])
 @io.from_header('tester_id', fields.Integer(required=True))
 def download_image(image_id, tester_id):
+    """
+    Download an image by it's ID.
+
+    :param image_id:
+    :param tester_id:
+    :return:
+    """
     persistor = ImagePersisor()
 
     if not persistor.ensure_tester_is_valid(tester_id):
@@ -64,6 +83,13 @@ def download_image(image_id, tester_id):
 @app.route('/video/<video_id>', methods=['GET'])
 @io.from_header('tester_id', fields.Integer(required=True))
 def download_video(video_id, tester_id):
+    """
+    Download a video by it's ID.
+
+    :param video_id:
+    :param tester_id:
+    :return:
+    """
     persistor = VideoPersisor()
 
     if not persistor.ensure_tester_is_valid(tester_id):
@@ -83,4 +109,10 @@ def download_video(video_id, tester_id):
 @app.route('/testers/<test_id>', methods=['GET'])
 @io.marshal_with(TesterSchema, envelope='testers')
 def get_testers(test_id):
+    """
+    Get all tester data by a test ID.
+
+    :param test_id:
+    :return:
+    """
     return TesterPersisor().get_testers(test_id)
