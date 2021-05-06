@@ -11,7 +11,7 @@ You will see the following parameter in a lot of the endpoint for a tester's ID:
 ```sh
 @io.from_header('tester_id', fields.Integer(required=True))
 ```
-This ID should be passed in the headers of your request (using curl or postman/insomnia etc.). I treated it kind of
+This ID should be passed in the headers of your request, except when adding a new tester. (using curl or postman/insomnia etc.). I treated it kind of
 like an authentication field for getting data for the correct tester. It's just a basic integer that
 is incremented for every tester.
 

@@ -40,6 +40,7 @@ def import_images(tester_id, image_data):
     Import images for a tester, see ImageSchema for input types.
 
     Can import multiple images at once.
+    The path will have to be './images/xx.png'
 
     Note: The function of this is poor, as the images are expected to be in the project folder...
           In hindsight, choosing a serialisation package/library that better handles bulk files should have been a
